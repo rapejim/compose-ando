@@ -1,0 +1,85 @@
+####################
+## Utiles comunes ##
+####################
+x-environment-puid:
+  &default-puid
+  # PUID: ${UID:-1000}
+  PUID: ${UID:?  ¡IMPORTANTE! Falta el UID, ejecuta --> export UID=$UID}
+x-environment-pgid:
+  &default-pgid
+  # PGID: ${GID:-1000}
+  PGID: ${GID:?  ¡IMPORTANTE! Falta el GID, ejecuta --> export GID=$(id -g)}
+
+version: "3.7"
+services:
+
+  ########################################
+  ## Para renovar certificados por HTTP ##
+  ## https://www.nginx.com/             ##
+  ########################################
+  nginx-cert:
+    container_name: nginx-cert
+    hostname: nginx-cert
+    image: nginx # https://hub.docker.com/_/nginx
+    restart: unless-stopped
+    ports: 
+      - 80:80
+    volumes:
+      - /docker/nginx/html:/usr/share/nginx/html:ro
+    networks:
+      - DockerLAN
+
+  ############################
+  ## Heimdall               ##
+  ## https://heimdall.site/ ##
+  ############################
+  heimdall:
+    container_name: heimdall
+    hostname: heimdall
+    image: linuxserver/heimdall # https://hub.docker.com/r/linuxserver/heimdall
+    restart: always
+    ports: 
+      - 80:80
+      - 443:443
+    volumes:
+      - /docker/heimdall/config:/config
+      # - /etc/webmin/letsencrypt-cert.pem:/config/certs/letsencrypt-cert.pem
+      # - /etc/webmin/letsencrypt-key.pem:/config/certs/letsencrypt-key.pem
+    environment:
+      << : *default-puid
+      << : *default-pgid
+      TZ: Europe/Madrid
+    networks:
+      - DockerLAN
+
+  #####################
+  ## N8N             ##
+  ## https://n8n.io/ ##
+  #####################
+  n8n:
+    container_name: n8n
+    hostname: n8n
+    image: n8nio/n8n # https://hub.docker.com/r/n8nio/n8n
+    restart: unless-stopped
+    ports: 
+      - 5678:5678
+    volumes:
+      - /docker/n8n:/home/node/.n8n
+    environment:
+      GENERIC_TIMEZONE: Europe/Madrid
+      TZ: Europe/Madrid
+    networks:
+      - DockerLAN
+
+
+###########
+## REDES ##
+###########
+networks:
+  DockerLAN:  ## Red bridge propia ##
+    name: DockerLAN
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24

@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  ###############
+  ## Portainer ##
+  ###############
+  portainer:
+    container_name: portainer
+    hostname: portainer
+    image: portainer/portainer-ce:latest
+    restart: always
+    ports: 
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /docker/Portainer/data:/data
+    #   ## SSL de webmin ##
+    #   - /etc/webmin/letsencrypt-cert.pem:/certs/letsencrypt-cert.pem
+    #   - /etc/webmin/letsencrypt-key.pem:/certs/letsencrypt-key.pem
+    # comand:
+    # - "--ssl --sslcert /certs/letsencrypt-cert.pem --sslkey /certs/letsencrypt-key.pem"
+    labels:
+      - hide.container=true
+    network_mode: "bridge"
