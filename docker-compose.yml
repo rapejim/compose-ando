@@ -13,21 +13,22 @@ x-environment-pgid:
 version: "3.7"
 services:
 
-  ########################################
-  ## Para renovar certificados por HTTP ##
-  ## https://www.nginx.com/             ##
-  ########################################
-  nginx-cert:
-    container_name: nginx-cert
-    hostname: nginx-cert
-    image: nginx # https://hub.docker.com/_/nginx
-    restart: unless-stopped
-    ports: 
-      - 80:80
+  ##########################################
+  ## DynDNS (ddclient)                    ##
+  ## https://github.com/ddclient/ddclient ##
+  ##########################################
+  dyndns:
+    container_name: dyndns
+    hostname: dyndns
+    image: linuxserver/ddclient:latest # https://hub.docker.com/r/linuxserver/ddclient
+    restart: always
     volumes:
-      - /docker/nginx/html:/usr/share/nginx/html:ro
-    networks:
-      - DockerLAN
+      - /docker/dyndns/config:/config
+    environment:
+      PUID : ${UID:-1000}
+      PGID : ${GID:-1000}
+      TZ: Europe/Madrid
+    network_mode: "bridge"
 
   ############################
   ## Heimdall               ##
@@ -69,6 +70,22 @@ services:
     environment:
       GENERIC_TIMEZONE: Europe/Madrid
       TZ: Europe/Madrid
+    networks:
+      - DockerLAN
+
+  ########################################
+  ## Para renovar certificados por HTTP ##
+  ## https://www.nginx.com/             ##
+  ########################################
+  nginx-cert:
+    container_name: nginx-cert
+    hostname: nginx-cert
+    image: nginx:latest # https://hub.docker.com/_/nginx
+    restart: unless-stopped
+    ports: 
+      - 80:80
+    volumes:
+      - /docker/nginx/html:/usr/share/nginx/html:ro
     networks:
       - DockerLAN
 
