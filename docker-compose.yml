@@ -39,7 +39,7 @@ services:
     image: linuxserver/heimdall # https://hub.docker.com/r/linuxserver/heimdall
     restart: always
     ports: 
-      - 80:80
+      # - 80:80
       - 443:443
     volumes:
       - /docker/heimdall/config:/config
