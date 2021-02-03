@@ -16,8 +16,7 @@ services:
     #   ## SSL de webmin ##
     #   - /etc/webmin/letsencrypt-cert.pem:/certs/letsencrypt-cert.pem
     #   - /etc/webmin/letsencrypt-key.pem:/certs/letsencrypt-key.pem
-    # comand:
-    # - "--ssl --sslcert /certs/letsencrypt-cert.pem --sslkey /certs/letsencrypt-key.pem"
+    # command: --ssl --sslcert /certs/letsencrypt-cert.pem --sslkey /certs/letsencrypt-key.pem
     labels:
-      - hide.container=true
+      - hide.container
     network_mode: "bridge"
