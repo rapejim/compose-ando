@@ -5,10 +5,21 @@ x-environment-puid:
   &default-puid
   # PUID: ${UID:-1000}
   PUID: ${UID:?  ¡IMPORTANTE! Falta el UID, ejecuta --> export UID=$UID}
+
 x-environment-pgid:
   &default-pgid
   # PGID: ${GID:-1000}
   PGID: ${GID:?  ¡IMPORTANTE! Falta el GID, ejecuta --> export GID=$(id -g)}
+
+x-environment-userid:
+  &default-userid
+  # USER_ID: ${UID:-1000}
+  USER_ID: ${UID:?  ¡IMPORTANTE! Falta el UID, ejecuta --> export UID=$UID}
+
+x-environment-groupid:
+  &default-groupid
+  # GROUP_ID: ${GID:-1000}
+  GROUP_ID: ${GID:?  ¡IMPORTANTE! Falta el GID, ejecuta --> export GID=$(id -g)}
 
 version: "3.7"
 services:
@@ -25,8 +36,8 @@ services:
     volumes:
       - /docker/dyndns/config:/config
     environment:
-      PUID : ${UID:-1000}
-      PGID : ${GID:-1000}
+      << : *default-puid
+      << : *default-pgid
       TZ: Europe/Madrid
     network_mode: "bridge"
 
@@ -73,10 +84,10 @@ services:
     networks:
       - DockerLAN
 
-  ########################################
-  ## Para renovar certificados por HTTP ##
-  ## https://www.nginx.com/             ##
-  ########################################
+  ##############################################
+  ## Nginx para renovar certificados por HTTP ##
+  ## https://www.nginx.com/                   ##
+  ##############################################
   nginx-cert:
     container_name: nginx-cert
     hostname: nginx-cert
@@ -85,7 +96,98 @@ services:
     ports: 
       - 80:80
     volumes:
-      - /docker/nginx/html:/usr/share/nginx/html:ro
+      - /docker/nginx-cert/html:/usr/share/nginx/html:ro
+    network_mode: "bridge"
+
+  ####################################
+  ## Nginx Proxy Manager            ##
+  ## https://nginxproxymanager.com/ ##
+  ####################################
+  nginx-proxy-manager:
+    container_name: Nginx-Proxy-Manager
+    hostname: Nginx-Proxy-Manager
+    image: jc21/nginx-proxy-manager:2 # https://hub.docker.com/r/jc21/nginx-proxy-manager
+    restart: always
+    ports: 
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - /docker/Nginx-Proxy-Manager/data:/data
+      - /docker/Nginx-Proxy-Manager/letsencrypt:/etc/letsencrypt
+      - /docker/Nginx-Proxy-Manager/app/config/production.json:/app/config/production.json
+      ## Contenido del archivo production.json para usar SQLite:
+      ## {
+      ##   "database": {
+      ##     "engine": "knex-native",
+      ##     "knex": {
+      ##       "client": "sqlite3",
+      ##       "connection": {
+      ##         "filename": "/data/database.sqlite"
+      ##       }
+      ##     }
+      ##   }
+      ## }
+    networks:
+      - DockerLAN
+
+  #####################################################
+  ## Plex & Plexdrive (Rapejim)                      ##
+  ## https://www.plex.tv/                            ##
+  ## https://github.com/rapejim/pms-plexdrive-docker ##
+  #####################################################
+  plex-cloud:
+    container_name: PlexCloud
+    hostname: PlexCloud
+    image: rapejim/pms-plexdrive-docker:beta # https://hub.docker.com/r/rapejim/pms-plexdrive-docker
+    restart: unless-stopped
+    privileged: true
+    ports: 
+      - 32400:32400
+    volumes:
+      - /docker/PlexCloud/config:/config
+      - /docker/PlexCloud/transcode:/transcode
+    environment:
+      TZ: Europe/Madrid
+      PLEX_UID : ${UID:-1000}
+      PLEX_GID : ${GID:-1000}
+      PLEXDRIVE_MOUNT_POINT: /home/Plex/media
+      CHANGE_CONFIG_DIR_OWNERSHIP: 'false'
+      CHANGE_PLEXDRIVE_CONFIG_DIR_OWNERSHIP: 'true'
+      # PLEX_CLAIM: XXXXXXXXXXXXXXXXXXXXXXXXXX
+      EXTRA_PARAMS: --drive-id=0ACd3-O2oLDQUUk9PVA
+    cap_add:
+      - MKNOD
+      - SYS_ADMIN
+    devices:
+      - "/dev/fuse"
+    network_mode: "bridge"
+
+  ##################################################
+  ## RcloneBrowser (kapitainsky)                  ##
+  ## https://kapitainsky.github.io/RcloneBrowser/ ##
+  ##################################################
+  rclone-browser:
+    container_name: RcloneBrowser
+    hostname: RcloneBrowser
+    image: romancin/rclonebrowser # https://hub.docker.com/r/romancin/rclonebrowser
+    restart: unless-stopped
+    ports: 
+      - 5800:5800
+    volumes:
+      - /docker/RcloneBrowser/config:/config
+      - /docker/RcloneBrowser/shared:/shared
+      - /docker/RcloneBrowser/media:/media
+      #   ## SSL de webmin ##
+      # - /etc/webmin/letsencrypt-cert.pem:/config/certs/web-fullchain.pem
+      # - /etc/webmin/letsencrypt-key.pem:/config/certs/web-privkey.pem
+    environment:
+      << : *default-userid
+      << : *default-groupid
+      TZ: Europe/Madrid
+      SECURE_CONNECTION: 1
+      DISPLAY_WIDTH: 1280
+      DISPLAY_HEIGHT: 720
     networks:
       - DockerLAN
 
