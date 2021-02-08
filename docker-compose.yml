@@ -48,7 +48,7 @@ services:
   heimdall:
     container_name: heimdall
     hostname: heimdall
-    image: linuxserver/heimdall # https://hub.docker.com/r/linuxserver/heimdall
+    image: linuxserver/heimdall:latest # https://hub.docker.com/r/linuxserver/heimdall
     restart: always
     ports: 
       # - 80:80
@@ -65,6 +65,24 @@ services:
     networks:
       - DockerLAN
 
+  ##########################
+  ## MariaDB              ##
+  ## https://mariadb.org/ ##
+  ##########################
+  mariadb:
+    container_name: mariadb
+    hostname: mariadb
+    image: mariadb:latest # https://hub.docker.com/_/mariadb
+    restart: always
+    ports: 
+      - 3306:3306
+    volumes:
+      - /docker/mariadb/var/lib/mysql:/var/lib/mysql
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: XXXXXXXXXXXXXXXX
+    networks:
+      - CuponesFever_LAN
+
   #####################
   ## N8N             ##
   ## https://n8n.io/ ##
@@ -72,7 +90,7 @@ services:
   n8n:
     container_name: n8n
     hostname: n8n
-    image: n8nio/n8n # https://hub.docker.com/r/n8nio/n8n
+    image: n8nio/n8n:latest # https://hub.docker.com/r/n8nio/n8n
     restart: unless-stopped
     ports: 
       - 5678:5678
@@ -131,6 +149,25 @@ services:
     networks:
       - DockerLAN
 
+  ##########################
+  ## Node-RED             ##
+  ## https://nodered.org/ ##
+  ##########################
+  nodered:
+    container_name: NodeRED
+    hostname: NodeRED
+    image: nodered/node-red:latest # https://hub.docker.com/r/nodered/node-red
+    restart: unless-stopped
+    user: root
+    ports: 
+      - 1880:1880
+    volumes:
+      - /docker/NodeRED/data:/data
+    environment:
+      TZ: Europe/Madrid
+    networks:
+      - DockerLAN
+
   #####################################################
   ## Plex & Plexdrive (Rapejim)                      ##
   ## https://www.plex.tv/                            ##
@@ -170,7 +207,7 @@ services:
   rclone-browser:
     container_name: RcloneBrowser
     hostname: RcloneBrowser
-    image: romancin/rclonebrowser # https://hub.docker.com/r/romancin/rclonebrowser
+    image: romancin/rclonebrowser:latest # https://hub.docker.com/r/romancin/rclonebrowser
     restart: unless-stopped
     ports: 
       - 5800:5800
