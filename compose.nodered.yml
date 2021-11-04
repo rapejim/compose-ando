@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+
+  ##########################
+  ## Node-RED             ##
+  ## https://nodered.org/ ##
+  ##########################
+  nodered:
+    container_name: NodeRED
+    hostname: NodeRED
+    image: nodered/node-red:latest # https://hub.docker.com/r/nodered/node-red
+    restart: unless-stopped
+    user: ${UID:-1000}:${GID:-1000}
+    # ports: # Uncomment ports lines if not use a reverse proxy
+    #   - 1880:1880
+    # volumes: # Uncomment volumes lines for data persistance
+    #   - /docker/NodeRED/data:/data
+    environment:
+      TZ: Europe/Madrid
+    networks:
+      - DockerLAN
+
+
+###########
+## REDES ##
+###########
+networks:
+  DockerLAN:  ## Red bridge propia ##
+    name: DockerLAN
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24

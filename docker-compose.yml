@@ -19,104 +19,39 @@ services:
   ## MariaDB              ##
   ## https://mariadb.org/ ##
   ##########################
-  mariadb:
-    container_name: mariadb
-    hostname: mariadb
-    image: mariadb:latest # https://hub.docker.com/_/mariadb
-    restart: always
-    ports: 
-      - 3306:3306
-    volumes:
-      - /docker/mariadb/var/lib/mysql:/var/lib/mysql
-    # environment:
-    #   MYSQL_ROOT_PASSWORD: XXXXXXXXXXXXXXXX
-    networks:
-      - CuponesFever_LAN
-
-  #####################
-  ## N8N             ##
-  ## https://n8n.io/ ##
-  #####################
-  n8n:
-    container_name: n8n
-    hostname: n8n
-    image: n8nio/n8n:latest # https://hub.docker.com/r/n8nio/n8n
-    restart: unless-stopped
-    ports: 
-      - 5678:5678
-    volumes:
-      - /docker/n8n:/home/node/.n8n
-    environment:
-      GENERIC_TIMEZONE: Europe/Madrid
-      TZ: Europe/Madrid
-    networks:
-      - DockerLAN
-
-  ##############################################
-  ## Nginx para renovar certificados por HTTP ##
-  ## https://www.nginx.com/                   ##
-  ##############################################
-  nginx-cert:
-    container_name: nginx-cert
-    hostname: nginx-cert
-    image: nginx:latest # https://hub.docker.com/_/nginx
-    restart: unless-stopped
-    ports: 
-      - 80:80
-    volumes:
-      - /docker/nginx-cert/html:/usr/share/nginx/html:ro
-    network_mode: "bridge"
+  # Add compose.mariadb.yml to COMPOSE_FILE variable on .env file:
+  # COMPOSE_FILE=docker-compose.yml:compose.mariadb.yml
 
   ####################################
   ## Nginx Proxy Manager            ##
   ## https://nginxproxymanager.com/ ##
   ####################################
-  nginx-proxy-manager:
-    container_name: Nginx-Proxy-Manager
-    hostname: Nginx-Proxy-Manager
-    image: jc21/nginx-proxy-manager:2 # https://hub.docker.com/r/jc21/nginx-proxy-manager
-    restart: always
-    ports: 
-      - 80:80
-      - 81:81
-      - 443:443
-    volumes:
-      - /docker/Nginx-Proxy-Manager/data:/data
-      - /docker/Nginx-Proxy-Manager/letsencrypt:/etc/letsencrypt
-      - /docker/Nginx-Proxy-Manager/app/config/production.json:/app/config/production.json
-      ## Contenido del archivo production.json para usar SQLite:
-      ## {
-      ##   "database": {
-      ##     "engine": "knex-native",
-      ##     "knex": {
-      ##       "client": "sqlite3",
-      ##       "connection": {
-      ##         "filename": "/data/database.sqlite"
-      ##       }
-      ##     }
-      ##   }
-      ## }
-    networks:
-      - DockerLAN
+  # Add compose.npmanager.yml to COMPOSE_FILE variable on .env file:
+  # COMPOSE_FILE=docker-compose.yml:compose.npmanager.yml
+
+  ###############################
+  ## Portainer                 ##
+  ## https://www.portainer.io/ ##
+  ###############################
+  # Add compose.portainer.yml to COMPOSE_FILE variable on .env file:
+  # COMPOSE_FILE=docker-compose.yml:compose.portainer.yml
+
+  #####################
+  ## N8N             ##
+  ## https://n8n.io/ ##
+  #####################
+  # Add compose.n8n.yml to COMPOSE_FILE variable on .env file:
+  # COMPOSE_FILE=docker-compose.yml:compose.n8n.yml
 
   ##########################
   ## Node-RED             ##
   ## https://nodered.org/ ##
   ##########################
+  # Add compose.nodered.yml to COMPOSE_FILE variable on .env file:
+  # COMPOSE_FILE=docker-compose.yml:compose.nodered.yml
   nodered:
-    container_name: NodeRED
-    hostname: NodeRED
-    image: nodered/node-red:latest # https://hub.docker.com/r/nodered/node-red
-    restart: unless-stopped
-    user: root
-    ports: 
+    ports:
       - 1880:1880
-    volumes:
-      - /docker/NodeRED/data:/data
-    environment:
-      TZ: Europe/Madrid
-    networks:
-      - DockerLAN
 
   #####################################################
   ## Plex & Plexdrive (Rapejim)                      ##

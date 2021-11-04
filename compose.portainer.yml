@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+
+  ###############################
+  ## Portainer                 ##
+  ## https://www.portainer.io/ ##
+  ###############################
+  portainer:
+    container_name: portainer
+    hostname: portainer
+    image: portainer/portainer-ce:latest # https://hub.docker.com/r/portainer/portainer-ce
+    restart: always
+    # ports: # Uncomment ports lines if not use a reverse proxy
+    #   - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # - /docker/Portainer/data:/data # Uncomment line for data persistance
+    networks:
+      - DockerLAN
+
+
+###########
+## REDES ##
+###########
+networks:
+  DockerLAN:  ## Red bridge propia ##
+    name: DockerLAN
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24

@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+
+  #####################
+  ## N8N             ##
+  ## https://n8n.io/ ##
+  #####################
+  n8n:
+    container_name: n8n
+    hostname: n8n
+    image: n8nio/n8n:latest # https://hub.docker.com/r/n8nio/n8n
+    restart: unless-stopped
+    # ports: # Uncomment ports lines if not use a reverse proxy
+    #   - 5678:5678
+    # volumes: # Uncomment volumes lines for data persistance
+    #   - /docker/n8n:/home/node/.n8n
+    environment:
+      GENERIC_TIMEZONE: Europe/Madrid
+      # N8N_BASIC_AUTH_ACTIVE: 'true'
+      # N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER} # Declare it on .env file
+      # N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD} # Declare it on .env file
+      # N8N_HOST: ${N8N_HOST} # Declare it on .env file
+      # N8N_PROTOCOL: https
+      # N8N_PORT: 5678
+      # VUE_APP_URL_BASE_API: ${VUE_APP_URL_BASE_API} # Declare it on .env file
+      # WEBHOOK_TUNNEL_URL: ${WEBHOOK_TUNNEL_URL} # Declare it on .env file
+    networks:
+      - DockerLAN
+
+###########
+## REDES ##
+###########
+networks:
+  DockerLAN:  ## Red bridge propia ##
+    name: DockerLAN
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24

@@ -1,0 +1,49 @@
+version: "3.7"
+services:
+
+  ####################################
+  ## Nginx Proxy Manager            ##
+  ## https://nginxproxymanager.com/ ##
+  ####################################
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    hostname: nginx-proxy-manager
+    image: jc21/nginx-proxy-manager:2 # https://hub.docker.com/r/jc21/nginx-proxy-manager
+    restart: always
+    ports: 
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      # - /docker/nginx-proxy-manager/data:/data # Uncomment this line for data persistance
+      # - /docker/nginx-proxy-manager/letsencrypt:/etc/letsencrypt # Uncomment lines for access to certs
+      - /docker/nginx-proxy-manager/app/config/production.json:/app/config/production.json
+      
+      ## Contenido del archivo production.json para usar SQLite:
+      ## {
+      ##   "database": {
+      ##     "engine": "knex-native",
+      ##     "knex": {
+      ##       "client": "sqlite3",
+      ##       "connection": {
+      ##         "filename": "/data/database.sqlite"
+      ##       },
+      ##       "useNullAsDefault": true
+      ##     }
+      ##   }
+      ## }
+    networks:
+      - DockerLAN
+
+
+###########
+## REDES ##
+###########
+networks:
+  DockerLAN:  ## Red bridge propia ##
+    name: DockerLAN
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24

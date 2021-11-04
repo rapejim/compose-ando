@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+
+  ##########################
+  ## MariaDB              ##
+  ## https://mariadb.org/ ##
+  ##########################
+  mariadb:
+    container_name: mariadb
+    hostname: mariadb
+    image: mariadb:latest # https://hub.docker.com/_/mariadb
+    restart: always
+    # ports: # Uncomment ports lines if not use a reverse proxy
+    #   - 3306:3306
+    # volumes:  # Uncomment volumes lines for data persistance
+    #   - /docker/mariadb/var/lib/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD} # Declare it on .env file
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -uroot -p${MARIADB_ROOT_PASSWORD} -h localhost > /dev/null && echo OK || exit 1" ]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+    networks:
+      - DockerLAN
+
+
+###########
+## REDES ##
+###########
+networks:
+  DockerLAN:  ## Red bridge propia ##
+    name: DockerLAN
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24

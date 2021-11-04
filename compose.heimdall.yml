@@ -10,21 +10,18 @@ services:
     hostname: heimdall
     image: linuxserver/heimdall:latest # https://hub.docker.com/r/linuxserver/heimdall
     restart: always
-    # ports: 
+    # ports: # Uncomment ports lines if not use a reverse proxy
     #   - 80:80
     #   - 443:443
-    volumes:
-      - /docker/heimdall/config:/config
-      #   ## SSL de webmin ##
-      # - /etc/webmin/letsencrypt-cert.pem:/config/certs/letsencrypt-cert.pem
-      # - /etc/webmin/letsencrypt-key.pem:/config/certs/letsencrypt-key.pem
+    # volumes: # Uncomment volumes lines for data persistance
+    #   - /docker/heimdall/config:/config
     environment:
       PUID: ${UID:-1000}
       PGID: ${GID:-1000}
       TZ: ${TZ:-'Europe/Madrid'}
     networks:
       - DockerLAN
-    
+
 
 ###########
 ## REDES ##
