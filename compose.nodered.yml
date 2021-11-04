@@ -6,15 +6,15 @@ services:
   ## https://nodered.org/ ##
   ##########################
   nodered:
-    container_name: NodeRED
-    hostname: NodeRED
+    container_name: nodered
+    hostname: nodered
     image: nodered/node-red:latest # https://hub.docker.com/r/nodered/node-red
     restart: unless-stopped
     user: ${UID:-1000}:${GID:-1000}
     # ports: # Uncomment ports lines if not use a reverse proxy
     #   - 1880:1880
     # volumes: # Uncomment volumes lines for data persistance
-    #   - /docker/NodeRED/data:/data
+    #   - /docker/nodered/data:/data
     environment:
       TZ: Europe/Madrid
     networks:

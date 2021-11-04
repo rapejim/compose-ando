@@ -29,13 +29,6 @@ services:
   # Add compose.npmanager.yml to COMPOSE_FILE variable on .env file:
   # COMPOSE_FILE=docker-compose.yml:compose.npmanager.yml
 
-  ###############################
-  ## Portainer                 ##
-  ## https://www.portainer.io/ ##
-  ###############################
-  # Add compose.portainer.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.portainer.yml
-
   #####################
   ## N8N             ##
   ## https://n8n.io/ ##
@@ -49,9 +42,14 @@ services:
   ##########################
   # Add compose.nodered.yml to COMPOSE_FILE variable on .env file:
   # COMPOSE_FILE=docker-compose.yml:compose.nodered.yml
-  nodered:
-    ports:
-      - 1880:1880
+
+  ###############################
+  ## Portainer                 ##
+  ## https://www.portainer.io/ ##
+  ###############################
+  # Add compose.portainer.yml to COMPOSE_FILE variable on .env file:
+  # COMPOSE_FILE=docker-compose.yml:compose.portainer.yml
+
 
   #####################################################
   ## Plex & Plexdrive (Rapejim)                      ##
