@@ -6,49 +6,49 @@ services:
   ## https://github.com/ddclient/ddclient ##
   ##########################################
   # Add compose.dyndns.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.dyndns.yml
+  # COMPOSE_FILE=docker-compose.yml,(...),compose.dyndns.yml
 
   ############################
   ## Heimdall               ##
   ## https://heimdall.site/ ##
   ############################
   # Add compose.heimdall.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.heimdall.yml
+  # COMPOSE_FILE=docker-compose.yml,(...),compose.heimdall.yml
 
   ##########################
   ## MariaDB              ##
   ## https://mariadb.org/ ##
   ##########################
   # Add compose.mariadb.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.mariadb.yml
+  # COMPOSE_FILE=docker-compose.yml,(...),compose.mariadb.yml
 
   ####################################
   ## Nginx Proxy Manager            ##
   ## https://nginxproxymanager.com/ ##
   ####################################
   # Add compose.npmanager.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.npmanager.yml
+  # COMPOSE_FILE=docker-compose.yml,(...),compose.npmanager.yml
 
   #####################
   ## N8N             ##
   ## https://n8n.io/ ##
   #####################
   # Add compose.n8n.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.n8n.yml
+  # COMPOSE_FILE=docker-compose.yml,(...),compose.n8n.yml
 
   ##########################
   ## Node-RED             ##
   ## https://nodered.org/ ##
   ##########################
   # Add compose.nodered.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.nodered.yml
+  # COMPOSE_FILE=docker-compose.yml,(...),compose.nodered.yml
 
   ###############################
   ## Portainer                 ##
   ## https://www.portainer.io/ ##
   ###############################
   # Add compose.portainer.yml to COMPOSE_FILE variable on .env file:
-  # COMPOSE_FILE=docker-compose.yml:compose.portainer.yml
+  # COMPOSE_FILE=docker-compose.yml,(...),compose.portainer.yml
 
 
   #####################################################
