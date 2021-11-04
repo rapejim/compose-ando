@@ -1,0 +1,1 @@
+# Project for testing with docker-compose

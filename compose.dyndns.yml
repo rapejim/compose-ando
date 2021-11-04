@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+
+  ##########################################
+  ## DynDNS (ddclient)                    ##
+  ## https://github.com/ddclient/ddclient ##
+  ##########################################
+  dyndns:
+    container_name: dyndns
+    hostname: dyndns
+    image: linuxserver/ddclient:latest # https://hub.docker.com/r/linuxserver/ddclient
+    restart: always
+    volumes:
+      - /docker/dyndns/config:/config
+    environment:
+      PUID: ${UID:-1000}
+      PGID: ${GID:-1000}
+      TZ: ${TZ:-'Europe/Madrid'}
+    network_mode: "bridge"

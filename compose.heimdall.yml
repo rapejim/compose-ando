@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+
+  ############################
+  ## Heimdall               ##
+  ## https://heimdall.site/ ##
+  ############################
+  heimdall:
+    container_name: heimdall
+    hostname: heimdall
+    image: linuxserver/heimdall:latest # https://hub.docker.com/r/linuxserver/heimdall
+    restart: always
+    # ports: 
+    #   - 80:80
+    #   - 443:443
+    volumes:
+      - /docker/heimdall/config:/config
+      #   ## SSL de webmin ##
+      # - /etc/webmin/letsencrypt-cert.pem:/config/certs/letsencrypt-cert.pem
+      # - /etc/webmin/letsencrypt-key.pem:/config/certs/letsencrypt-key.pem
+    environment:
+      PUID: ${UID:-1000}
+      PGID: ${GID:-1000}
+      TZ: ${TZ:-'Europe/Madrid'}
+    networks:
+      - DockerLAN
+    
+
+###########
+## REDES ##
+###########
+networks:
+  DockerLAN:  ## Red bridge propia ##
+    name: DockerLAN
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24
